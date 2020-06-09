@@ -5,6 +5,7 @@
 #include<algorithm>
 #include<string>
 #include<cctype>
+#include<iomanip>
 using namespace std;
 
 struct Text{
@@ -13,6 +14,7 @@ struct Text{
     string bookname;
     string content;
     Text(const Text& obj):page(obj.page),chapter(obj.chapter),bookname(obj.bookname),content(obj.content){}
+    Text(){}
 };
 vector<Text> lines;
 vector<Text> answers;
@@ -34,7 +36,10 @@ void inBook(string book,int chapter=0){
                 for(int i=0;i<len;i++){
                     if(isdigit(line[i])){//如果是页码
                         cnt*=10;
-                        cnt+=line[i]-'0';
+                        cnt+=line[i]-'0';//计算页码
+                    }
+                    else{
+                        break;//数字不连续不算数
                     }
                 }
                 if(cnt!=0){
@@ -42,9 +47,19 @@ void inBook(string book,int chapter=0){
                 }
                 else{
                     transform(line.begin(),line.end(),line.begin(),::toupper);
+                    if(line.substr(0,7)=="CHAPTER"){
+                        tmp.chapter++;//无需读取 直接++
+                    }
                 }
             }
+            else{
+                tmp.content=line;
+                lines.push_back(tmp);
+            }
         }
+    }
+    else{
+        cout<<"数据读入失败:"<<book<<endl;
     }
 }
 
@@ -60,15 +75,31 @@ void init(){
 }
 
 void isearch(string name){
-
+    string::size_type siz;
+    for(vector<Text>::iterator i=lines.begin();i!=lines.end();i++){
+        siz=i->content.find(name);
+        if(siz!=string::npos){
+            answers.push_back(*i);//将本行作为答案
+        }
+    }
 }
 
-int isearch(int id){
-
+string isearch(int id){
+    int cnt=0;
+    for(vector<Text>::iterator i=answers.begin();i!=answers.end();i++){
+        cnt++;
+        if(cnt==id){
+            return i->content;
+        }
+    }
 }
 
-void out(){
-
+void out(string name){
+    int cnt=0;
+    for(vector<Text>::iterator i=answers.begin();i!=answers.end();i++){
+        cnt++;
+        cout<<cnt<<setw(7)<<name<<setw(8)<<i->page<<setw(8)<<i->chapter<<setw(8)<<i->bookname<<endl;
+    }
 }
 
 bool check(int id){
@@ -87,8 +118,8 @@ int main(){
     cout<<"请输入要查询的人名/地名"<<endl;
     cin>>name;
     isearch(name);
-    cout<<"序号       人名/地名       页码       章节       书名"<<endl;
-    out();
+    cout<<"序号"<<setw(7)<<"人名/地名"<<setw(8)<<"页码"<<setw(8)<<"章节"<<setw(8)<<"书名"<<endl;
+    out(name);
     cout<<"请输入要查询的序号"<<endl;
     cin>>id;
     while(check(id)){
