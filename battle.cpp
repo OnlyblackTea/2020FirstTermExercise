@@ -99,7 +99,7 @@ private:
     vector<Bullet> plysb;//保存玩家子弹的容器
     FriendlyPlane player;//玩家对象
     int score,speed;//分数和速度变量
-    vector< vector<char> > G;//地图
+    vector< vector<char> > G;//地图 char G[30][30]
 public:
     bool flag;//游戏失败时为false
     MainProgram():score(0),speed(10),flag(true){//初始化游戏对象，生成地图和玩家
