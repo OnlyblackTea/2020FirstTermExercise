@@ -112,6 +112,7 @@ bool check(int id){
 
 int main(){
     ios::sync_with_stdio(false);
+    system("chcp 65001");//调整控制台编码为UTF-8
     init();
     string name;
     int id;
