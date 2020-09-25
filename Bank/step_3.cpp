@@ -26,5 +26,5 @@ int main(){
     sa2.show();cout<<endl;
     ca.show();cout<<endl;
     cout<<"Total: "<<Account::getTotal()<<endl;
-    return 0
+    return 0;
 }

@@ -3,6 +3,7 @@
 
 #include<vector>
 #include<string>
+#include<map>
 #include"date.h"
 using namespace std;
 
@@ -12,29 +13,49 @@ private:
     double value;
     double sum;
 public:
-    Accumulator(Date, double);
+    Accumulator(Date, double );
     double getSum(Date );
+    bool notSettle();
     void change(Date , double );
     void reset(Date ,double );
     Date const getDate();
 };
-
+class AccountRecord;
 class Account{
 private:
     string id;
     double balance;
     static double total;
+    static multimap<Date, AccountRecord> recordMap;
 protected:
     Account(Date, string);
     void record(Date, double, string);
     void const error(string);
 public:
-    int const getId();
+    string getId() const;
     double const getBalance();
-    void const show();
+    virtual void const show()=0;
+    virtual void deposit(Date, double, string)=0;
+    virtual void withdraw(Date, double, string)=0;
+    virtual void settle(Date)=0;
     static double getTotal();
+    static void query(Date, Date);
     void print(Date, string);
     void print(Date, string, double, double, string);
+    void print(Date, string, double, double, string)const;
+};
+
+class AccountRecord{
+private:
+    Date date;
+    const Account* account;
+    double amount;
+    double balance;
+    std::string desc;
+public:
+    AccountRecord();
+    AccountRecord(Date, Account*, double, double, string);
+    void print();
 };
 
 class CreditAccount  : public Account{
@@ -64,6 +85,7 @@ public:
     void deposit(Date, double, string);
     void withdraw(Date, double, string);
     void settle(Date);
+    void const show();
 };
 
 #endif
